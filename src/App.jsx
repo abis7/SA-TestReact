@@ -15,13 +15,15 @@ function App() {
   //if(auth){const (modal, setModal = useState(false);}
 
   const [data, setData] = useState(db);
+  const[cart, setCart] = useState([]);
+
   console.log(data);
 
 
   return (
     <div>
 
-      <Header></Header>
+<Header cart={cart} />
 
 
       <main className="container-xl mt-5">
@@ -33,6 +35,8 @@ function App() {
               <Card
                 key={guitar.id}
                 guitar={guitar}
+                cart={cart}
+                setCart={setCart}
               />
             ))
           }
