@@ -1,58 +1,67 @@
-import { useState, useEffect, useReducer, use } from 'react'
+import { useState } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
-import './App.css'
 import Card from './components/Card'
 import { db } from './db/db'
+import './App.css'
 
 function App() {
-  //variable y su metodo para actualizar
-  // const [customer, setCustomer] = useState({});
-  //const [total, setTotal] = useState(0);
-  //const [products, setProducts] = useState([]);
-  // const[modal, setModal] = useState(false);
-  //console.log(customer);
-  //if(auth){const (modal, setModal = useState(false);}
+  const [data] = useState(db);
+  const [cart, setCart] = useState([]);
 
-  const [data, setData] = useState(db);
-  const[cart, setCart] = useState([]);
+  const incremento = (id) => {
+    const updatedCart = cart.map(item =>
+      item.id === id
+        ? { ...item, quantity: item.quantity + 1 }
+        : item
+    );
+    setCart(updatedCart);
+  };
 
-  console.log(data);
+  const decremento = (id) => {
+    const updatedCart = cart.map(item =>
+      item.id === id && item.quantity > 1
+        ? { ...item, quantity: item.quantity - 1 }
+        : item
+    );
+    setCart(updatedCart);
+  };
 
+  const eliminarDelCarrito = (id) => {
+    setCart(prevCart => prevCart.filter(guitar => guitar.id !== id));
+  };
+
+  const vaciarCarrito = () => {
+    setCart([]);
+  };
 
   return (
     <div>
-
-<Header cart={cart} />
-
+      <Header 
+        cart={cart} 
+        incremento={incremento} 
+        decremento={decremento} 
+        eliminarDelCarrito={eliminarDelCarrito}
+        vaciarCarrito={vaciarCarrito}
+      />
 
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
-
         <div className="row mt-5">
-          {
-            data.map((guitar) => (
-              <Card
-                key={guitar.id}
-                guitar={guitar}
-                cart={cart}
-                setCart={setCart}
-              />
-            ))
-          }
-
-
-
-
+          {data.map((guitar) => (
+            <Card
+              key={guitar.id}
+              guitar={guitar}
+              cart={cart}
+              setCart={setCart}
+            />
+          ))}
         </div>
       </main>
 
-
-      <Footer></Footer>
-
+      <Footer />
     </div>
-
   )
 }
 
-export default App
+export default App;

@@ -1,8 +1,9 @@
 import Item from "./Item"
 
-export default function Header({ cart }) {
-
-
+export default function Header({ cart, incremento, decremento, eliminarDelCarrito, vaciarCarrito }) {
+  
+  const isEmpty = cart.length === 0;
+  const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
 
   return (
     <header className="py-5 header">
@@ -17,10 +18,10 @@ export default function Header({ cart }) {
               <img className="img-fluid" src="/img/carrito.png" alt="carrito" />
 
               <div id="carrito" className="bg-white p-3">
-
-                {cart.length === 0 ? (
-                  <p className="text-center">El carrito está vacío</p>) : 
-                  (<>
+                {isEmpty ? (
+                  <p className="text-center m-0">El carrito está vacío</p>
+                ) : (
+                  <>
                     <table className="w-100 table">
                       <thead>
                         <tr>
@@ -36,21 +37,26 @@ export default function Header({ cart }) {
                           <Item
                             key={item.id}
                             item={item}
+                            incremento={incremento}
+                            decremento={decremento}
+                            eliminarDelCarrito={eliminarDelCarrito}
                           />
                         ))}
                       </tbody>
                     </table>
 
                     <p className="text-end">
-                      Total pagar: <span className="fw-bold">$899</span>
+                      Total pagar: <span className="fw-bold">${cartTotal}</span>
                     </p>
 
-                    <button className="btn btn-dark w-100 mt-3">
+                    <button 
+                      className="btn btn-dark w-100 mt-3"
+                      onClick={vaciarCarrito}
+                    >
                       Vaciar Carrito
                     </button>
                   </>
                 )}
-
               </div>
             </div>
           </nav>

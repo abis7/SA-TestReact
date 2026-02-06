@@ -1,20 +1,33 @@
 import React from 'react'
 
 export default function Card({ guitar, cart, setCart }) {
-    const { name, image, description, price } = guitar;
-    const imageSrc = `/img/${image}.jpg`;
-    const handleClick = (item) => {
-      const existingItem = cart.find(cartItem => cartItem.id === item.id);
-      if (existingItem) {
-        setCart(cart.map(cartItem => 
-          cartItem.id === item.id 
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
-        ));
-      } else {
-        setCart([{ ...item, quantity: 1 }, ...cart]);
-      }
+  const { name, image, description, price } = guitar;
+  const imageSrc = `/img/${image}.jpg`;
+  const handleClick = (item) => {
+    const existingItem = cart.find(cartItem => cartItem.id === item.id);
+    if (existingItem) {
+      setCart(cart.map(cartItem =>
+        cartItem.id === item.id
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
+      ));
+    } else {
+      setCart([{ ...item, quantity: 1 }, ...cart]);
     }
+  }
+
+  function addToCart(item) {
+  const itemExist = cart.findIndex(guitar => guitar.id === item.id);
+
+  if (itemExist >= 0) {
+    const updatedCart = [...cart];
+    updatedCart[itemExist].quantity++;
+    setCart(updatedCart);
+  } else {
+    item.quantity = 1;
+    setCart([...cart, item]);
+  }
+}
 
 
   return (
@@ -26,10 +39,10 @@ export default function Card({ guitar, cart, setCart }) {
         <h3 className="text-black fs-4 fw-bold text-uppercase">{name}</h3>
         <p>{description}</p>
         <p className="fw-black text-primary fs-3">${price}</p>
-        <button 
+        <button
           type="button"
           className="btn btn-dark w-100"
-          onClick={() => handleClick(guitar)}
+          onClick={() => addToCart(guitar)}
         >Agregar al Carrito</button>
       </div>
     </div>
