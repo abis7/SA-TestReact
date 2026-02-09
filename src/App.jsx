@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Card from './components/Card'
@@ -6,8 +6,20 @@ import { db } from './db/db'
 import './App.css'
 
 function App() {
+  
+  // Función para verificar si hay algo en LocalStorage al iniciar
+  const initialCart = () => {
+    const localStorageCart = localStorage.getItem('cart');
+    return localStorageCart ? JSON.parse(localStorageCart) : [];
+  };
+
   const [data] = useState(db);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(initialCart);
+
+  // useEffect para sincronizar el estado del carrito con LocalStorage
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
 
   const incremento = (id) => {
     const updatedCart = cart.map(item =>
